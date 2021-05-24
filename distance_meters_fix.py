@@ -1,20 +1,29 @@
 from geopy.distance import distance
 
-import ggps
+import xml.etree.ElementTree as ET
 import h3
 
 print('Start')
 
-infile = 'input/39970665555.tcx'
-handler = ggps.TcxHandler()
-handler.parse(infile)
-trackpoints = handler.trackpoints
-print(len(trackpoints))
+tree = ET.parse('input/39970665555.tcx')
+root = tree.getroot()
+print(root)
+activities = list(root)[0]
+print(activities)
+activity = list(activities)[0]
+print(activity)
+lap = list(activity)[1]
+print(lap)
+track = list(lap)[5]
+print(track)
+trackpoints = list(track)
+print(trackpoints)
 
-prevPoint = (float(trackpoints[0].get("latitudedegrees")), float(trackpoints[0].get("longitudedegrees")))
-prevCumMeters = float(trackpoints[0].get('distancemeters'))
 
-for t in trackpoints[6:]:
+prevPoint = (float(trackpoints[0].get("Position").get("LatitudeDegrees")), float(trackpoints[0].get("Position").get("LongitudeDegrees")))
+prevCumMeters = float(trackpoints[0].get('DistanceMeters'))
+
+for t in trackpoints:
     currPoint = (float(t.get("latitudedegrees")), float(t.get("longitudedegrees")))
     currCumMeters = float(t.get('distancemeters'))
 
